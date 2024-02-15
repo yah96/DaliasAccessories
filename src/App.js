@@ -47,9 +47,8 @@ const App = () => {
   };
 
   return (
-    <Router>
+    <Router basename="/DaliasAccessories">
       <div className="container mt-5">
-        {/* Conditional rendering of Header */}
         {!isRestrictedRoute() && <Header user={user} cartItemsCount={cartItems.length} />}
         <Routes>
           <Route path="/admin" element={<Login setUser={setUser} />} />
