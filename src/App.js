@@ -54,8 +54,7 @@ const App = () => {
         <Routes>
           <Route path="/admin" element={<Login setUser={setUser} />} />
           <Route path="/upload-images" element={user ? <ImageUpload /> : <Navigate to="/admin" />} />
-          <Route path="/" element={<LoadImages />} />
-          <Route index element={<Navigate to="/load-images" />} />
+          <Route path="/DaliasAccessories" element={<LoadImages />} />
           {/* Pass addToCart function as a prop to DynamicImageDisplay */}
           <Route path="/category/:mainCategory/:subCategory" element={<DynamicImageDisplay updateCartItemsCount ={updateCartItemsCount } />} />
           <Route path="/category/:mainCategory/" element={<MainCategoryComponent />} />
