@@ -1,0 +1,147 @@
+/* Header.css */
+
+.shop-header {
+  text-align: left;
+  background-color: #ffffff;
+  color: #000000;
+  position: fixed;
+  width: 90%;
+  top: 0;
+  left: 5%;
+  z-index: 1000;
+  font-family: 'Comic Sans MS', cursive;
+  font-size: 20px;
+  font-weight: bold;
+  height: 60px; /* Fixed height */
+  
+}
+.shop-title {
+  text-decoration: none; /* Remove underline */
+  color: inherit; /* Use the default text color */
+}
+
+.shop-title:hover {
+  color: inherit; /* Use the default text color on hover */
+}
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.header-category {
+  position: relative;
+  margin-right: 20px;
+  display: inline-block;
+}
+
+.dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100%); /* Adjusted to show below header and with some spacing */
+  left: 0;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  flex-direction: column; /* Updated to display the dropdown in a column */
+}
+
+/* Update the dropdown show class */
+.dropdown.show {
+  display: block;
+}
+
+
+/* Toggle button styles */
+.category-toggle {
+  background-color: transparent;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  display: none; /* Hide the toggle button by default */
+}
+@media screen and (min-width: 1128px) {
+  .Menu-button  { display: none; }
+  #leftside > button { display: none; }
+}
+/* Media query for smaller screens */
+@media (max-width: 1128px) {
+  .header-categories ul {
+    margin: 0; /* Reset margin */
+    padding: 0; /* Reset padding */
+    display: flex;
+    list-style: none;
+  }
+
+  .header-category:hover .dropdown {
+    display: flex;
+  }
+
+  .Menu-button {
+    margin-left: auto;
+    margin-right: 5%;
+    display: flex; /* Show the toggle button on smaller screens */
+  }
+
+  .header-categories {
+    display: none;
+    width: 100%;
+    position: absolute;
+    top: 60px;
+    left: 0;
+  }
+  .phone {
+    display: flex;
+    position: absolute; /* Position the phone dropdown absolutely */
+    top: 50px; /* Position it below the header */
+    left: calc(95% - 100px); /* Adjust the left position */
+    width: 40%;
+    z-index: 1000; /* Ensure the phone dropdown is below the menu button */
+    background: white; /* Add your desired background color */
+    padding: 10px; /* Add padding */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add box shadow */
+  }
+  .show-menu .phone {
+    display: block;
+  }
+}
+
+.header-category a {
+  color: black;
+  padding: 12px;
+  text-decoration: none;
+  display: block;
+  font-weight: bold; /* Keep the bold style for the main categories */
+}
+
+.header-category a:hover {
+  background-color: #ddd;
+}
+
+.header-categories ul {
+  margin: 0; /* Reset margin */
+  padding: 0; /* Reset padding */
+}
+
+/* Adjust shopping cart icon */
+.shopping-cart-icon {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.shopping-cart-icon > svg {
+  margin-right: 10px; /* Add space between icon and count */
+}
+
+.shopping-cart-icon > span {
+  background-color: #ff0000; /* Change background color of count */
+  color: #fff; /* Change text color of count */
+  border-radius: 50%; /* Make it circular */
+  padding: 5px; /* Add padding */
+  font-size: 12px; /* Adjust font size */
+  position: absolute; /* Position it absolutely */
+  top: -5px; /* Adjust position */
+  right: -5px; /* Adjust position */
+}

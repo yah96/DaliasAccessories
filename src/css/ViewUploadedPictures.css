@@ -1,0 +1,40 @@
+/* imageUpload.css */
+.uploaded-image-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+  }
+  
+  .uploaded-image-item {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #ddd;
+  }
+  
+  .uploaded-image-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  .uploaded-image-item p {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 5px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    margin: 0;
+  }
+  
+  .uploaded-image-item button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(255, 0, 0, 0.7);
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }

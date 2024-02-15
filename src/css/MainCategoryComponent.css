@@ -1,0 +1,50 @@
+/* MainCategoryComponent.css */
+
+.main-category-title {
+    margin-top: 6%;
+    text-align: center;
+  }
+  @media (max-width: 1123px) {
+    .main-category-title {
+        margin-top: 15%; /* Custom margin for smaller screens */
+    }
+}
+  .subcategory-container {
+    display: flex;
+    flex-direction: column; /* Display subcategories in a column */
+    align-items: center; /* Center align subcategories */
+  }
+  
+  .subcategory-item {
+    margin-bottom: 20px; /* Add some space between subcategories */
+    text-align: center;
+  }
+  
+  .subcategory-item h3 {
+    font-size: 1.2em;
+  }
+  
+  .image-list {
+    display: flex;
+    flex-wrap: nowrap; /* Prevent wrapping images to next line */
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin-bottom: 10px; /* Add some space below image row */
+  }
+  
+  .image-list img {
+    margin-right: 10px; /* Add some space between images */
+    cursor: pointer;
+    width: 300px;
+    height: 300px;
+    transition: transform 0.9s ease-in-out;
+  }
+  
+  .image-list img:last-child {
+    margin-right: 0; /* Remove margin from last image */
+  }
+  
+  .image-list img:hover {
+    transform: scale(1.1);
+  }
+  

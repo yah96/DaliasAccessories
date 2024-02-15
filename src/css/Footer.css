@@ -1,0 +1,52 @@
+/* Footer.css */
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #e5d5d5;
+    padding: 15px;
+  }
+  
+  .contact-info {
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    color: #000000;
+  }
+  
+  .social-media {
+    display: flex;
+    align-items: center;
+  }
+  
+  .instagram-icon,
+  .phone-icon {
+    margin-right: 10px; /* Increase spacing between icons */
+  }
+  
+  .instagram-icon {
+    margin-right: 25px;
+    font-size: 35px; /* Increase the font size for the Instagram icon */
+  }
+  
+  .phone-container {
+    display: flex;
+    flex-direction: column; /* Display items in a column layout */
+    align-items: center;
+  }
+  
+  .phone-icon {
+    margin-bottom: 5px; /* Add spacing between phone icon and number */
+  }
+  
+  .phone-number {
+    font-size: 14px;
+    margin-bottom: 0; /* Remove default margin */
+    color: #000000;
+  }
+  
+  .contact-text {
+    margin-left: 25px;
+    margin-right: 10px;
+  }
+  

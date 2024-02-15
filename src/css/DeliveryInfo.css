@@ -1,0 +1,38 @@
+/* DeliveryInfo.css */
+.delivery-info {
+    display: flex;
+    justify-content: center; /* Center the content horizontally */
+    margin: 20px 0; /* Adjust margin as needed */
+  }
+  
+  .delivery-option {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  
+  .icon {
+    max-width: 50px;
+    min-width: 50px;
+    max-height: 50px;
+    min-height: 50px;
+    width: 50px; /* Adjust icon size as needed */
+    height: 50px; /* Adjust icon size as needed */
+    margin-right: 10px; /* Add spacing between icon and text */
+    margin-left: 20%;
+  }
+  
+  .text {
+    text-align: left; /* Adjust text alignment as needed */
+    margin-right: 100px;
+    
+    /* Add additional styling as needed */
+  }
+
+  .text p:first-child {
+    margin-bottom: 0; /* Remove spacing between the first and second lines */
+  }
+  
+  .text p:last-child {
+    font-size: smaller; /* Make the font size smaller for the second line */
+  }
