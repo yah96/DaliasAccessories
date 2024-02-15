@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { HashRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes, Navigate } from 'react-router-dom'; // Change: Import HashRouter
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase';
 import ImageUpload from './components/ImageUpload';
@@ -47,16 +47,16 @@ const App = () => {
   };
 
   return (
-    <Router basename="/DaliasAccessories">
+    <Router basename="/"> {/* Change: Use HashRouter and specify basename */}
       <div className="container mt-5">
         {!isRestrictedRoute() && <Header user={user} cartItemsCount={cartItems.length} />}
         <Routes>
           <Route path="/admin" element={<Login setUser={setUser} />} />
           <Route path="/upload-images" element={user ? <ImageUpload /> : <Navigate to="/admin" />} />
-          <Route path="/" element={<LoadImages />} />
-          <Route path="/category/:mainCategory/:subCategory" element={<DynamicImageDisplay updateCartItemsCount ={updateCartItemsCount } />} />
+          <Route path="/" element={<LoadImages />} /> {/* Change: Removed basename from the root path */}
+          <Route path="/category/:mainCategory/:subCategory" element={<DynamicImageDisplay updateCartItemsCount={updateCartItemsCount} />} />
           <Route path="/category/:mainCategory/" element={<MainCategoryComponent />} />
-          <Route path="/shopping-cart" element={<ShoppingCart updateCartItemsCount ={updateCartItemsCount } />} />
+          <Route path="/shopping-cart" element={<ShoppingCart updateCartItemsCount={updateCartItemsCount} />} />
           <Route path="/view-uploaded-pictures" element={<ViewUploadedPictures />} />
         </Routes>
       </div>
