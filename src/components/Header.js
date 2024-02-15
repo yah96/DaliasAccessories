@@ -40,7 +40,7 @@ const Header = ({cartItemsCount}) => {
   return (
     <header className="shop-header">
       <div className="header-content">
-        <h1><Link to="/DaliasAccessories" className="shop-title">Dalia's Accessories</Link></h1> 
+        <h1><Link to="/" className="shop-title">Dalia's Accessories</Link></h1> 
         <nav className={`header-categories ${showMenu ? 'show-menu' : ''}`}>
           <ul>
             {mainCategories.map((mainCategory) => (

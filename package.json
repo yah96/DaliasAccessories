@@ -1,7 +1,7 @@
 {
   "name": "daliaaccessories",
   "version": "0.1.0",
-  "homepage": "https://yah96.github.io/DaliasAccessories",
+  "homepage": "https://yah96.github.io/DaliasAccessories/",
   "private": true,
   "dependencies": {
     "@getbrevo/brevo": "^2.0.0-beta.4",
