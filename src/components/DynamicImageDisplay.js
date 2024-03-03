@@ -73,6 +73,7 @@ const DynamicImageDisplay = ({ updateCartItemsCount }) => {
   };
 
   const handleImageClick = (index) => {
+    console.log(index)
     setSelectedMainImageIndex(index);
     setSelectedImageIndex(selectedDotImages[index]);
     setShowModal(true);
@@ -154,20 +155,24 @@ const DynamicImageDisplay = ({ updateCartItemsCount }) => {
 
       {/* Modal to display the selected image */}
       {showModal && (
-        <div className="dynamic-modal" onClick={closeModal}>
-          <img src={images[selectedMainImageIndex].imageUrls[selectedImageIndex]} alt="Selected " className="dynamic-modal-image" />
-          <div className="modal-btns-container">
-            <button className="modal-btn prev-btn" onClick={(e) => { e.stopPropagation(); prevImage(selectedMainImageIndex); }}>
-              <span className="btn-label">Previous</span>
-              <i className="fas fa-chevron-left"></i>
-            </button>
-            <button className="modal-btn next-btn" onClick={(e) => { e.stopPropagation(); nextImage(selectedMainImageIndex); }}>
-              <span className="btn-label">Next</span>
-              <i className="fas fa-chevron-right"></i>
-            </button>
-          </div>
-        </div>
-      )}
+  <div className="dynamic-modal" onClick={closeModal}>
+    {Array.isArray(images[selectedMainImageIndex].imageUrls) ? ( // Check if the item has multiple images
+      <img src={images[selectedMainImageIndex].imageUrls[selectedImageIndex]} alt="Selected " className="dynamic-modal-image" />
+    ) : (
+      <img src={images[selectedMainImageIndex].imageUrls} alt="Selected " className="dynamic-modal-image" /> // Display the single image
+    )}
+    <div className="modal-btns-container">
+      <button className="modal-btn prev-btn" onClick={(e) => { e.stopPropagation(); prevImage(selectedMainImageIndex); }}>
+        <span className="btn-label">Previous</span>
+        <i className="fas fa-chevron-left"></i>
+      </button>
+      <button className="modal-btn next-btn" onClick={(e) => { e.stopPropagation(); nextImage(selectedMainImageIndex); }}>
+        <span className="btn-label">Next</span>
+        <i className="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+)}
 
     </div>
   );
