@@ -28,6 +28,24 @@ const Header = ({cartItemsCount}) => {
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
+  
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Close the menu if the click is outside of the menu and the menu button
+      if (showMenu && !event.target.closest('.header-categories') && !event.target.closest('.Menu-button')) {
+        setShowMenu(false);
+      }
+    };
+  
+    // Add event listener to handle clicks outside of the menu and menu button
+    document.body.addEventListener('click', handleClickOutside);
+  
+    return () => {
+      // Clean up event listener on component unmount
+      document.body.removeEventListener('click', handleClickOutside);
+    };
+  }, [showMenu]); // Re-run effect when the showMenu state changes
+  
 
   const handleCategoryHover = (category) => {
     setHoveredCategory(category);
@@ -64,6 +82,10 @@ const Header = ({cartItemsCount}) => {
             ))}
           </ul>
         </nav>
+        <Link to="/shopping-cart" className="shopping-cart-icon">
+          <FaShoppingCart size={24} />
+          <span>{cartItemsCount}</span>
+        </Link>
         <button className="Menu-button" onClick={toggleMenu} id="leftside">
           <FaBars size={24} />
         </button>
@@ -78,10 +100,6 @@ const Header = ({cartItemsCount}) => {
             </ul>
           </nav>
         )}
-        <Link to="/shopping-cart" className="shopping-cart-icon">
-          <FaShoppingCart size={24} />
-          <span>{cartItemsCount}</span>
-        </Link>
       </div>
     </header>
   );

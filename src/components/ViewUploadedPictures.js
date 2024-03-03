@@ -1,52 +1,59 @@
 import React, { useState, useEffect } from 'react';
 import { firestore, storage } from '../firebase';
 import { ref, deleteObject } from 'firebase/storage';
-import { collection, query, getDocs, doc, getDoc, deleteDoc } from 'firebase/firestore';
+import { collection, query, getDocs, doc, getDoc, deleteDoc, updateDoc } from 'firebase/firestore';
+import EditModal from './EditModal';
 import '../css/ViewUploadedPictures.css';
 
 const ViewUploadedPictures = () => {
     const [pictures, setPictures] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [selectedPicture, setSelectedPicture] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [selectedDotImages, setSelectedDotImages] = useState([]); // Array to track selected dot index for each item
 
     useEffect(() => {
         const fetchImages = async () => {
-          try {
-            const categories = ['Woman', 'Kids', 'Man', 'Nail', 'Makeup'];
-            const imagesData = [];
-      
-            for (const category of categories) {
-              let subcategories = [];
-              if (category !== 'Nail' && category !== 'Makeup') {
-                subcategories = await fetchSubcategories(category);
-              } else {
-                // For Nail and Makeup categories without subcategories
-                subcategories = ["generatedID123"];
-              }
-              
-              for (const subcategory of subcategories) {
-                const imagesCollectionRef = collection(firestore, 'images', category, subcategory);
-                const q = query(imagesCollectionRef);
-                const snapshot = await getDocs(q);
-      
-                const imageData = snapshot.docs.map((doc) => ({
-                  id: doc.id,
-                  imageUrl: doc.data().imageUrl,
-                  caption: doc.data().caption || 'No caption',
-                  mainCategory: category,
-                  subCategory: subcategory,
-                }));
-                imagesData.push(...imageData);
-              }
+            try {
+                const categories = ['Woman', 'Kids', 'Man', 'Nail', 'Makeup'];
+                const imagesData = [];
+
+                for (const category of categories) {
+                    let subcategories = [];
+                    if (category !== 'Nail' && category !== 'Makeup') {
+                        subcategories = await fetchSubcategories(category);
+                    } else {
+                        subcategories = ["generatedID123"];
+                    }
+
+                    for (const subcategory of subcategories) {
+                        const imagesCollectionRef = collection(firestore, 'images', category, subcategory);
+                        const q = query(imagesCollectionRef);
+                        const snapshot = await getDocs(q);
+
+                        const imageData = snapshot.docs.map((doc) => ({
+                            id: doc.id,
+                            imageUrl: doc.data().imageUrl,
+                            caption: doc.data().caption || 'No caption',
+                            mainCategory: category,
+                            subCategory: subcategory,
+                            details: doc.data().datails || 'No details',
+                            price: doc.data().price || "No price"
+                        }));
+                        imagesData.push(...imageData);
+                    }
+                }
+                setPictures(imagesData);
+                setSelectedDotImages(new Array(imagesData.length).fill(0));
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching images', error);
+                setLoading(false);
             }
-            setPictures(imagesData);
-            setLoading(false); // Set loading to false after images are fetched
-          } catch (error) {
-            console.error('Error fetching images', error);
-            setLoading(false); // Set loading to false in case of error
-          }
         };
         fetchImages();
-      }, []);
+    }, []);
 
     const fetchSubcategories = async (mainCategory) => {
         try {
@@ -67,46 +74,153 @@ const ViewUploadedPictures = () => {
     };
 
     const handleDelete = async (id, mainCategory, subCategory, imageUrl) => {
-        // Confirm deletion
-        const confirmDelete = window.confirm('Are you sure you want to delete this image?');
+        const confirmDelete = window.confirm('Are you sure you want to delete this item?');
         if (!confirmDelete) return;
-    
+
         try {
-            // Delete the image document from Firestore
             await deleteDoc(doc(firestore, 'images', mainCategory, subCategory, id));
-    
-            // Extract filename from imageUrl
             const name = imageUrl.split('%2F')[1].split('?')[0].replace(/%20/g, ' ');
-    
-            // Create storage reference
             const storageRef = ref(storage, `images/${name}`);
-    
-            // Delete the image file
             await deleteObject(storageRef);
-    
-            // Update the state to remove the deleted image
             setPictures(pictures.filter((picture) => picture.id !== id));
         } catch (error) {
             console.error('Error deleting image', error);
         }
-    };    
-    
+    };
+
+    const handleEdit = (id, mainCategory, subCategory, currentCaption, currentPrice, currentDetails) => {
+        setSelectedPicture({ id, mainCategory, subCategory, currentCaption, currentPrice, currentDetails });
+        setShowModal(true);
+    };
+
+    const updateImage = async (id, mainCategory, subCategory, newCaption, newPrice, newDetails) => {
+        try {
+            const imageRef = doc(firestore, 'images', mainCategory, subCategory, id);
+            await updateDoc(imageRef, {
+                caption: newCaption,
+                price: parseFloat(newPrice),
+                details: newDetails
+            });
+            setPictures(pictures.map(picture => {
+                if (picture.id === id) {
+                    return {
+                        ...picture,
+                        caption: newCaption,
+                        price: parseFloat(newPrice),
+                        details: newDetails
+                    };
+                }
+                return picture;
+            }));
+        } catch (error) {
+            console.error('Error updating image', error);
+        }
+    };
+
+    const handleDeleteImage = async (id, mainCategory, subCategory, imageUrlIndex) => {
+        const confirmDelete = window.confirm('Are you sure you want to delete one image?');
+        if (!confirmDelete) return;
+
+        try {
+            const updatedImageUrlArray = [...pictures.find(picture => picture.id === id).imageUrl];
+            updatedImageUrlArray.splice(imageUrlIndex, 1);
+            await updateDoc(doc(firestore, 'images', mainCategory, subCategory, id), {
+                imageUrl: updatedImageUrlArray
+            });
+            setPictures(pictures.map(picture => {
+                if (picture.id === id) {
+                    return {
+                        ...picture,
+                        imageUrl: updatedImageUrlArray
+                    };
+                }
+                return picture;
+            }));
+        } catch (error) {
+            console.error('Error deleting image', error);
+        }
+    };
+    const handleDotClick = (index, itemIndex) => {
+        setSelectedDotImages(prevDotImages => {
+            const updatedDotImages = [...prevDotImages];
+            updatedDotImages[itemIndex] = index;
+            return updatedDotImages;
+        });
+        console.log(pictures)
+    };
+
+
+
 
     return (
         <div className="uploaded-image-container">
             {loading ? (
                 <p>Loading...</p>
             ) : (
-                pictures.map((picture) => (
-                    <div key={picture.id} className="uploaded-image-item">
-                        <img src={picture.imageUrl} alt={picture.caption} />
-                        <p>{picture.caption}</p>
-                        <button onClick={() => handleDelete(picture.id, picture.mainCategory, picture.subCategory, picture.imageUrl)}>Delete</button>
+                <>
+{pictures.map((picture, index) => (
+    <div key={picture.id} className="uploaded-image-item">
+        {/* Display single image if imageUrl is a string */}
+        {typeof picture.imageUrl === 'string' && (
+            <div>
+                <img src={picture.imageUrl} alt={picture.caption} className="uploaded-image" />
+                <div className="uploaded-image-button-container">
+                    <button className="delete-button" onClick={() => handleDeleteImage(picture.id, picture.mainCategory, picture.subCategory, 0)}>x</button>
+                </div>
+            </div>
+        )}
+
+        {/* Display multiple images if imageUrl is an array */}
+        {Array.isArray(picture.imageUrl) && (
+            picture.imageUrl.map((url, i) => (
+                <div key={i} style={{ display: i === selectedDotImages[index] ? 'block' : 'none' }}>
+                    <img src={url} alt={picture.caption} className="uploaded-image" />
+                    <div className="uploaded-image-button-container">
+                        <button className="delete-button" onClick={() => handleDeleteImage(picture.id, picture.mainCategory, picture.subCategory, i)}>x</button>
                     </div>
+                </div>
+            ))
+        )}
+
+        <div className="pagination-dots">
+            {/* Render pagination dots only if there are multiple images */}
+            {Array.isArray(picture.imageUrl) && picture.imageUrl.length > 1 && (
+                picture.imageUrl.map((url, i) => (
+                    <span key={i} className={i === selectedDotImages[index] ? "dot active" : "dot"} onClick={() => handleDotClick(i, index)}></span>
                 ))
             )}
         </div>
+
+        <div>
+            <p className="image-caption">{picture.caption}</p>
+        </div>
+        <div className="uploaded-image-button-container">
+            <button className="edit-button" onClick={() => handleEdit(picture.id, picture.mainCategory, picture.subCategory, picture.caption, picture.price, picture.details)}>Edit</button>
+            <button className="delete-button" onClick={() => handleDelete(picture.id, picture.mainCategory, picture.subCategory, picture.imageUrl)}>Delete</button>
+        </div>
+    </div>
+))}
+
+                </>
+            )}
+            {showModal && selectedPicture && (
+                <div className="modal-wrapper">
+                    <EditModal
+                        id={selectedPicture.id}
+                        mainCategory={selectedPicture.mainCategory}
+                        subCategory={selectedPicture.subCategory}
+                        currentCaption={selectedPicture.currentCaption}
+                        currentPrice={selectedPicture.currentPrice}
+                        currentDetails={selectedPicture.currentDetails}
+                        handleEdit={updateImage}
+                        setShowModal={setShowModal}
+                    />
+                </div>
+            )}
+        </div>
     );
+    
+    
 };
 
 export default ViewUploadedPictures;

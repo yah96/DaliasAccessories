@@ -65,47 +65,6 @@
   .Menu-button  { display: none; }
   #leftside > button { display: none; }
 }
-/* Media query for smaller screens */
-@media (max-width: 1128px) {
-  .header-categories ul {
-    margin: 0; /* Reset margin */
-    padding: 0; /* Reset padding */
-    display: flex;
-    list-style: none;
-  }
-
-  .header-category:hover .dropdown {
-    display: flex;
-  }
-
-  .Menu-button {
-    margin-left: auto;
-    margin-right: 5%;
-    display: flex; /* Show the toggle button on smaller screens */
-  }
-
-  .header-categories {
-    display: none;
-    width: 100%;
-    position: absolute;
-    top: 60px;
-    left: 0;
-  }
-  .phone {
-    display: flex;
-    position: absolute; /* Position the phone dropdown absolutely */
-    top: 50px; /* Position it below the header */
-    left: calc(95% - 100px); /* Adjust the left position */
-    width: 40%;
-    z-index: 1000; /* Ensure the phone dropdown is below the menu button */
-    background: white; /* Add your desired background color */
-    padding: 10px; /* Add padding */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add box shadow */
-  }
-  .show-menu .phone {
-    display: block;
-  }
-}
 
 .header-category a {
   color: black;
@@ -144,4 +103,62 @@
   position: absolute; /* Position it absolutely */
   top: -5px; /* Adjust position */
   right: -5px; /* Adjust position */
+}
+/* Media query for smaller screens */
+@media (max-width: 1128px) {
+  .shop-header {
+    text-align: left;
+    background-color: #ffffff;
+    color: #000000;
+    position: fixed;
+    width: 100%;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    font-family: 'Comic Sans MS', cursive;
+    font-size: 20px;
+    font-weight: bold;
+    height: 6%; /* Fixed height */
+    
+  }
+  .header-categories ul {
+    margin: 0; /* Reset margin */
+    padding: 0; /* Reset padding */
+    width: 100%;
+    display: flex;
+    list-style: none;
+  }
+
+  .header-category:hover .dropdown {
+    display: flex;
+  }
+  .shopping-cart-icon {
+    margin-left: 20%;
+  }
+  .Menu-button {
+    margin-left: auto;
+    display: flex; /* Show the toggle button on smaller screens */
+  }
+
+  .header-categories {
+    display: none;
+    width: 100%;
+    position: absolute;
+    top: 60px;
+    left: 0;
+  }
+  .phone {
+    display: flex;
+    position: absolute; /* Position the phone dropdown absolutely */
+    top: 50px; /* Position it below the header */
+    width: 40%;
+    left: 60%;
+    z-index: 1000; /* Ensure the phone dropdown is below the menu button */
+    background: white; /* Add your desired background color */
+    padding: 10px; /* Add padding */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add box shadow */
+  }
+  .show-menu .phone {
+    display: block;
+  }
 }

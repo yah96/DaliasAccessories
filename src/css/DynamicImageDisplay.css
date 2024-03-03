@@ -3,6 +3,7 @@
   margin-top: 6%;
   position: relative; /* Add position relative for modal positioning */
 }
+
 .dynamic-image-item img {
   width: 100%;
   height: 200px; /* Ensure images maintain aspect ratio */
@@ -19,8 +20,9 @@
 
 @media (max-width: 1123px) {
   .dynamic-image-display {
-      margin-top: 15%; /* Custom margin for smaller screens */
+    margin-top: 15%; /* Custom margin for smaller screens */
   }
+  
   .dynamic-image-item img {
     width: auto;
     height: auto; /* Ensure images maintain aspect ratio */
@@ -31,10 +33,11 @@
     cursor: pointer; /* Add cursor pointer for clickable images */
   }
   
-.dynamic-image-item img:hover {
-  transform: none;
+  .dynamic-image-item img:hover {
+    transform: none;
+  }
 }
-}
+
 .dynamic-image-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -46,15 +49,13 @@
   overflow: hidden;
 }
 
-
-
-
 .dynamic-image-details {
   margin-top: 8px;
 }
 
 .caption {
   font-size: 14px;
+  font-weight: bold;
   color: #333;
 }
 
@@ -64,7 +65,23 @@
   color: #007bff;
 }
 
-button {
+.dot {
+  height: 10px;
+  width: 10px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  margin: 0 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Add transition for smooth color change */
+}
+
+/* Style for active dot */
+.active {
+  background-color: #717171;
+}
+
+.add-to-cart-button {
   background-color: #007bff;
   color: #fff;
   border: none;
@@ -75,7 +92,7 @@ button {
   transition: background-color 0.3s ease;
 }
 
-button:hover {
+.add-to-cart-button:hover {
   background-color: #0056b3;
 }
 
@@ -91,8 +108,47 @@ button:hover {
   align-items: center;
 }
 
+/* Animation when user clicks on an image */
 .dynamic-modal-image {
   max-width: 80%;
   max-height: 80%;
   border-radius: 8px;
+  transition: transform 0.3s ease; /* Add transition for smooth scale effect */
+}
+
+/* Scale up when modal image is clicked */
+.dynamic-modal-image:active {
+  transform: scale(1.1);
+}
+.modal-btns-container {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.modal-btn {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.prev-btn,
+.next-btn {
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.prev-btn:hover,
+.next-btn:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+.details {
+  font-size: 14px;
+  color: #555;
 }

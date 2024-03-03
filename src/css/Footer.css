@@ -49,4 +49,41 @@
     margin-left: 25px;
     margin-right: 10px;
   }
-  
+  /* Media query for smaller screens */
+@media only screen and (max-width: 768px) {
+  .footer-container {
+    flex-direction: column; /* Display items in a column layout */
+    padding: 20px; /* Increase padding for better spacing */
+  }
+
+  .contact-info {
+    font-size: 20px; /* Reduce font size for better readability */
+    margin-bottom: 15px; /* Add spacing between contact info and social media icons */
+  }
+
+  .social-media {
+    margin-top: 15px; /* Add spacing above social media icons */
+  }
+
+  .instagram-icon {
+    margin-right: 10px; /* Adjust spacing between Instagram icon and phone icon */
+    font-size: 30px; /* Reduce font size for better consistency */
+  }
+
+  .phone-container {
+    align-items: center; /* Center items horizontally */
+  }
+
+  .phone-icon {
+    margin-bottom: 5px; /* Add spacing between phone icon and number */
+  }
+
+  .phone-number {
+    font-size: 14px; /* Reduce font size for better readability */
+  }
+
+  .contact-text {
+    margin: 0; /* Remove margins */
+    text-align: center; /* Center align the text */
+  }
+}

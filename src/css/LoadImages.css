@@ -16,13 +16,7 @@ body {
   align-items: center;
   margin: 0 auto;
 }
-/* Media query for smaller screens */
-@media only screen and (max-width: 768px) {
-  .shop-container {
-    width: 100%; /* Take up full width on smaller screens */
-    margin: 0; /* Remove any margin */
-  }
-}
+
 
 .category-row {
   display: flex;
@@ -94,4 +88,19 @@ body {
 
 .btn-primary:hover {
   background-color: #555;
+}
+/* Media query for smaller screens */
+@media only screen and (max-width: 768px) {
+  body {
+    max-width: 100%; /* Take up full width on smaller screens */
+    padding: 0; /* Remove any padding */
+    margin: 0; /* Remove any margin */
+    background-color: #ffffff; /* Adjust background color as needed */
+  }
+
+  .shop-container {
+    width: 100%; /* Take up full width on smaller screens */
+    padding: 10px; /* Adjust padding as needed */
+    margin: 0; /* Remove any margin */
+  }
 }

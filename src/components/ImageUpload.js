@@ -20,8 +20,9 @@ import { Link } from 'react-router-dom';
 import '../css/imageUpload.css';
 
 const ImageUpload = () => {
-  const [image, setImage] = useState(null);
+  const [images, setImages] = useState([]);
   const [caption, setCaption] = useState('');
+  const [details,setDetails] = useState('');
   const [price, setPrice] = useState('');
   const [stock, setStock] = useState('');
   const [mainCategory, setMainCategory] = useState('');
@@ -29,129 +30,142 @@ const ImageUpload = () => {
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState(null);
   const [uploadComplete, setUploadComplete] = useState(false);
-  const [uploading, setUploading] = useState(false); // New state to track uploading state
+  const [uploading, setUploading] = useState(false);
 
   const handleChange = (e) => {
-    if (e.target.files[0]) {
-      setImage(e.target.files[0]);
+    if (e.target.files) {
+      setImages([...e.target.files]);
     }
   };
 
   const handleUpload = async () => {
     try {
-      if (!image) {
-        setError('Please select an image before uploading.');
+      if (!images || images.length === 0) {
+        setError('Please select at least one image before uploading.');
         return;
       }
-
+  
       if (!mainCategory) {
         setError('Please select at least the main category.');
         return;
       }
-
-      const storageRef = ref(storage, `images/${image.name}`);
-      const uploadTask = uploadBytesResumable(storageRef, image);
-
-      uploadTask.on(
-        'state_changed',
-        (snapshot) => {
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          setProgress(progress);
-        },
-        (error) => {
-          console.error(error);
-          setError(error.message);
-        },
-        async () => {
-          setProgress(0);
-
-          const url = await getDownloadURL(storageRef);
-
-          if (mainCategory === 'Wallpaper') {
-            await deleteWallpaperAndImage();
-            const wallpaperDocRef = await addDoc(collection(firestore, 'wallpapers'), {
-              timestamp: serverTimestamp(),
-              imageUrl: url,
-            });
-            
-            window.alert('Wallpaper added successfully!');
-          } else {
-            const subcategoryDocumentId = subCategory || generateUniqueID();
-
-            const imageDocRef = doc(collection(firestore, 'images', mainCategory, subcategoryDocumentId));
-
-            const imageDocSnapshot = await getDoc(imageDocRef);
-
-            if (imageDocSnapshot.exists()) {
-              await updateDoc(imageDocRef, {
-                caption: caption,
-                imageUrl: url,
-                price: parseFloat(price), // Convert price to number
-                stock: parseInt(stock), // Convert stock to number
-              });
-            } else {
-              await setDoc(imageDocRef, {
-                caption: caption,
-                imageUrl: url,
-                price: parseFloat(price), // Convert price to number
-                stock: parseInt(stock), // Convert stock to number
-              });
+  
+      const imageURLs = [];
+  
+      for (const image of images) {
+        const storageRef = ref(storage, `images/${image.name}`);
+        const uploadTask = uploadBytesResumable(storageRef, image);
+  
+        await new Promise((resolve, reject) => {
+          uploadTask.on(
+            'state_changed',
+            (snapshot) => {
+              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              setProgress(progress);
+            },
+            (error) => {
+              console.error(error);
+              reject(error);
+            },
+            async () => {
+              setProgress(0);
+  
+              const url = await getDownloadURL(storageRef);
+              imageURLs.push(url);
+  
+              resolve(url);
             }
-            const categoriesCollection = collection(firestore, 'categories');
-            const categoryDocRef = doc(categoriesCollection, mainCategory);
-            const categoryDocSnapshot = await getDoc(categoryDocRef);
-
-            if (categoryDocSnapshot.exists()) {
-              // If category exists, check if the subcategory exists
-              const categoryData = categoryDocSnapshot.data();
-
-              if (subCategory) {
-                if (categoryData[subCategory]) {
-                  // If subcategory exists, update the topImageUrl
-                  await updateDoc(categoryDocRef, {
-                    [subCategory]: {
-                      topImageUrl: url,
-                      lastUpdated: serverTimestamp(),
-                    },
-                  });
-                } else {
-                  // If subcategory doesn't exist, add the subcategory
-                  await updateDoc(categoryDocRef, {
-                    [subCategory]: {
-                      name: mainCategory,
-                      description: subCategory,
-                      topImageUrl: url,
-                      lastUpdated: serverTimestamp(),
-                    },
-                  });
-                }
-              } else {
-                // If subcategory is empty, update the topImageUrl for the main category
-                await updateDoc(categoryDocRef, {
-                  topImageUrl: url,
-                  lastUpdated: serverTimestamp(),
-                });
-              }
-            } else {
-              // If category doesn't exist, create a new category without subcategory
-              await setDoc(categoryDocRef, {
-                topImageUrl: url,
-                lastUpdated: serverTimestamp(),
-              });
-            }
-            window.alert('Upload successful!');
-          }
-          setCaption('');
-          setPrice('');
-          setStock('');
-          setImage(null);
-          setMainCategory('');
-          setSubCategory('');
-          setError(null);
-          setUploading(false);
-          setUploadComplete(true);
+          );
+        });
+      }
+  
+      if (mainCategory === 'Wallpaper') {
+        await deleteWallpaperAndImage();
+        const wallpaperDocRef = await addDoc(collection(firestore, 'wallpapers'), {
+          timestamp: serverTimestamp(),
+          imageUrl: imageURLs,
+        });
+  
+        window.alert('Wallpaper added successfully!');
+      } else {
+        const subcategoryDocumentId = subCategory || generateUniqueID();
+  
+        const imageDocRef = doc(collection(firestore, 'images', mainCategory, subcategoryDocumentId));
+  
+        const imageDocSnapshot = await getDoc(imageDocRef);
+  
+        if (imageDocSnapshot.exists()) {
+          await updateDoc(imageDocRef, {
+            caption: caption,
+            details: details,
+            imageUrl: imageURLs,
+            price: parseFloat(price), // Convert price to number
+            stock: parseInt(stock), // Convert stock to number
+          });
+        } else {
+          await setDoc(imageDocRef, {
+            caption: caption,
+            details: details,
+            imageUrl: imageURLs,
+            price: parseFloat(price), // Convert price to number
+            stock: parseInt(stock), // Convert stock to number
+          });
         }
-      );
+  
+        const categoriesCollection = collection(firestore, 'categories');
+        const categoryDocRef = doc(categoriesCollection, mainCategory);
+        const categoryDocSnapshot = await getDoc(categoryDocRef);
+  
+        if (categoryDocSnapshot.exists()) {
+          const categoryData = categoryDocSnapshot.data();
+  
+          if (subCategory) {
+            if (categoryData[subCategory]) {
+              await updateDoc(categoryDocRef, {
+                [subCategory]: {
+                  topImageUrl: imageURLs[0], // Update only the first image URL as topImageUrl
+                  lastUpdated: serverTimestamp(),
+                },
+              });
+            } else {
+              await updateDoc(categoryDocRef, {
+                [subCategory]: {
+                  name: mainCategory,
+                  description: subCategory,
+                  topImageUrl: imageURLs[0], // Update only the first image URL as topImageUrl
+                  lastUpdated: serverTimestamp(),
+                },
+              });
+            }
+          } else {
+            await updateDoc(categoryDocRef, {
+              topImageUrl: imageURLs[0], // Update only the first image URL as topImageUrl
+              lastUpdated: serverTimestamp(),
+            });
+          }
+        } else {
+          await setDoc(categoryDocRef, {
+            topImageUrl: imageURLs[0], // Update only the first image URL as topImageUrl
+            lastUpdated: serverTimestamp(),
+          });
+        }
+  
+        window.alert('Upload successful!');
+      }
+  
+      // Reset state and display success message
+      setCaption('');
+      setDetails('');
+      setPrice('');
+      setStock('');
+      setImages([]);
+      setMainCategory('');
+      setSubCategory('');
+      setError(null);
+      setUploading(false);
+      setUploadComplete(true);
+  
+      window.alert('All images uploaded successfully!');
     } catch (error) {
       console.error(error.message);
       setError(error.message);
@@ -159,6 +173,8 @@ const ImageUpload = () => {
       window.alert('Upload failed. Please try again.');
     }
   };
+  
+
 
   function generateUniqueID() {
     return 'generatedID123';
@@ -197,12 +213,19 @@ const ImageUpload = () => {
   return (
     <div className="image-upload-container clearfix">
       <h2>Image Upload</h2>
-      <input type="file" onChange={handleChange} className="input-file" />
+      <input type="file" onChange={handleChange} multiple className="input-file" />
       <input
         type="text"
         placeholder="Enter a caption"
         value={caption}
         onChange={(e) => setCaption(e.target.value)}
+        className="input-caption"
+      />
+      <input
+        type="text"
+        placeholder="Enter Details"
+        value={details}
+        onChange={(e) => setDetails(e.target.value)}
         className="input-caption"
       />
       <input

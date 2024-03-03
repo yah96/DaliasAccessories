@@ -30,6 +30,7 @@ const ShoppingCart = ({ updateCartItemsCount }) => {
     cartItems.forEach((item) => {
       totalPrice += parseFloat(item.price);
     });
+    console.log(cartItems)
     setTotalPrice(totalPrice);
   }, [cartItems]);
 
@@ -45,14 +46,18 @@ const ShoppingCart = ({ updateCartItemsCount }) => {
   // Function to handle checkout
   const handleCheckout = async () => {
     // Check if all required fields are filled
-    if (!address || !firstName || !lastName) {
+    if (!address || !firstName || !lastName || !phoneNumber) {
       window.alert('Please fill in all required fields.');
       return;
     }
   
+    // Calculate total price including shipping cost
+    const shippingCost = 3; // Example shipping cost
+    const totalPriceWithShipping = totalPrice + shippingCost;
+  
     // Ask for confirmation before proceeding
-    const confirmCheckout = window.confirm(`Are you sure you want to proceed with the checkout?\n\nTotal Price:$${totalPrice.toFixed(2)}\n\nItems:\n${cartItems.map(item => `- ${item.caption} - $${item.price}`).join('\n')}
-    \n\nPhone Number: ${phoneNumber}\nAddress: ${address}\nFirst Name: ${firstName}\nLast Name: ${lastName}`);
+    const confirmCheckout = window.confirm(`Are you sure you want to proceed with the checkout?\n\nTotal Price (Including Shipping): $${totalPriceWithShipping.toFixed(2)}\n\nItems:\n${cartItems.map(item => `- ${item.caption} - $${item.price}`).join('\n')}
+      \n\nPhone Number: ${phoneNumber}\nAddress: ${address}\nFirst Name: ${firstName}\nLast Name: ${lastName}`);
     if (!confirmCheckout) {
       return;
     }
@@ -66,8 +71,8 @@ const ShoppingCart = ({ updateCartItemsCount }) => {
       Message: {
         Body: {
           Text: {
-            Data: `You got a new order!\n\nTotal Price:$${totalPrice.toFixed(2)}\n\nItems:\n${cartItems.map(item => `- ${item.caption} - $${item.price}`).join('\n')}
-             \n\nPhone Number: ${phoneNumber}\nAddress: ${address}\nFirst Name: ${firstName}\nLast Name: ${lastName}`,
+            Data: `You got a new order!\n\nTotal Price (Including Shipping): $${totalPriceWithShipping.toFixed(2)}\n\nItems:\n${cartItems.map(item => `- ${item.caption} - $${item.price}`).join('\n')}
+              \n\nPhone Number: ${phoneNumber}\nAddress: ${address}\nFirst Name: ${firstName}\nLast Name: ${lastName}`,
           },
         },
         Subject: {
@@ -91,6 +96,7 @@ const ShoppingCart = ({ updateCartItemsCount }) => {
       // Handle error, display error message to user, etc.
     }
   };
+  
 
   return (
     <div className="shopping-cart">
@@ -115,6 +121,8 @@ const ShoppingCart = ({ updateCartItemsCount }) => {
           </ul>
           <div className="checkout-details">
             <p className="total-price">Total Price: ${totalPrice.toFixed(2)}</p>
+            <p className="shipping-cost">Shipping Cost: $3.00</p>
+            <p className="total-price-with-shipping">Total Price (Including Shipping): ${(totalPrice + 3).toFixed(2)}</p>
             <input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} placeholder="Phone Number" className="input-field" />
             <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Address" className="input-field" />
             <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="First Name" className="input-field" />
@@ -125,6 +133,7 @@ const ShoppingCart = ({ updateCartItemsCount }) => {
       )}
     </div>
   );
+  
 };
 
 export default ShoppingCart;
