@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/DaliasAccessories/static/css/main.21d13c9a.css",
-    "main.js": "/DaliasAccessories/static/js/main.1798e9dc.js",
+    "main.js": "/DaliasAccessories/static/js/main.bcdcbbb4.js",
     "static/js/512.f243bd2c.chunk.js": "/DaliasAccessories/static/js/512.f243bd2c.chunk.js",
     "static/media/wallet.png": "/DaliasAccessories/static/media/wallet.ce36779abb3efabe1d04.png",
     "index.html": "/DaliasAccessories/index.html",
     "main.21d13c9a.css.map": "/DaliasAccessories/static/css/main.21d13c9a.css.map",
-    "main.1798e9dc.js.map": "/DaliasAccessories/static/js/main.1798e9dc.js.map",
+    "main.bcdcbbb4.js.map": "/DaliasAccessories/static/js/main.bcdcbbb4.js.map",
     "512.f243bd2c.chunk.js.map": "/DaliasAccessories/static/js/512.f243bd2c.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.21d13c9a.css",
-    "static/js/main.1798e9dc.js"
+    "static/js/main.bcdcbbb4.js"
   ]
 }
