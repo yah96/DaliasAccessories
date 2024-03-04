@@ -91,3 +91,44 @@
 .dot.active {
   background-color: #333;
 }
+/* Hide the default file input button */
+.upload-input {
+  display: none;
+}
+
+/* Style the upload icon container */
+.upload-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Style the upload icon */
+.upload-icon {
+  /* Define the styles for the "+" icon */
+  background-color: #007bff; /* Change the background color */
+  color: #fff; /* Change the text color */
+  border: none;
+  border-radius: 50%; /* Make it a circle */
+  font-size: 24px; /* Adjust the icon size */
+  cursor: pointer;
+  width: 40px; /* Set the width of the button */
+  height: 40px; /* Set the height of the button */
+  display: flex; /* Use flexbox to center the content */
+  justify-content: center; /* Center the content horizontally */
+  align-items: center; /* Center the content vertically */
+}
+
+.upload-icon:hover {
+  background-color: #0056b3; /* Change the background color on hover */
+}
+
+/* Style the file input container */
+.file-input-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0px;
+  height: 0px;
+  opacity: 0; /* Make it transparent */
+  cursor: pointer; /* Change cursor to pointer */
+}
