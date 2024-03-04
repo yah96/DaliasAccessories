@@ -57,8 +57,11 @@ const App = () => {
           <Route path="/category/:mainCategory/:subCategory" element={<DynamicImageDisplay updateCartItemsCount={updateCartItemsCount} />} />
           <Route path="/category/:mainCategory/" element={<MainCategoryComponent />} />
           <Route path="/shopping-cart" element={<ShoppingCart updateCartItemsCount={updateCartItemsCount} />} />
-          <Route path="/view-uploaded-pictures" element={<ViewUploadedPictures />} />
-        </Routes>
+          {user ? (
+            <Route path="/view-uploaded-pictures" element={<ViewUploadedPictures />} />
+          ) : (
+            <Route path="/view-uploaded-pictures" element={<Navigate to="/admin" />} />
+          )}        </Routes>
         <div className="copyright">
         <p>&copy; 2024 Y.A. All rights reserved.</p>
       </div>
