@@ -1,55 +1,65 @@
 /* Footer.css */
 .footer-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #e5d5d5;
-    padding: 15px;
-  }
-  
-  .contact-info {
-    font-size: 24px;
-    display: flex;
-    align-items: center;
-    color: #000000;
-  }
-  
-  .social-media {
-    display: flex;
-    align-items: center;
-  }
-  
-  .instagram-icon,
-  .phone-icon {
-    margin-right: 10px; /* Increase spacing between icons */
-  }
-  
-  .instagram-icon {
-    margin-right: 25px;
-    font-size: 35px; /* Increase the font size for the Instagram icon */
-  }
-  
-  .phone-container {
-    display: flex;
-    flex-direction: column; /* Display items in a column layout */
-    align-items: center;
-  }
-  
-  .phone-icon {
-    margin-bottom: 5px; /* Add spacing between phone icon and number */
-  }
-  
-  .phone-number {
-    font-size: 14px;
-    margin-bottom: 0; /* Remove default margin */
-    color: #000000;
-  }
-  
-  .contact-text {
-    margin-left: 25px;
-    margin-right: 10px;
-  }
-  /* Media query for smaller screens */
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #a39384; /* Warm, classy color */
+  padding: 20px;
+  border-top: 1px solid #e0e0e0; /* Add a subtle border at the top */
+}
+
+.contact-info {
+  font-size: 18px; /* Reduce font size for better readability */
+  display: flex;
+  align-items: center;
+  color: #333; /* Darker text color */
+}
+
+.social-media {
+  display: flex;
+  align-items: center;
+}
+
+.instagram-icon,
+.phone-icon,
+.whatsapp-icon {
+  margin-right: 10px; /* Increase spacing between icons */
+}
+
+.instagram-icon,
+.whatsapp-icon {
+  font-size: 24px; /* Increase the font size for the Instagram and WhatsApp icons */
+  cursor: pointer; /* Change cursor to pointer when hovering over WhatsApp icon */
+}
+
+.phone-container {
+  display: flex;
+  flex-direction: column; /* Display items in a column layout */
+  align-items: center;
+}
+
+.phone-icon {
+  margin-bottom: 5px; /* Add spacing between phone icon and number */
+}
+
+.phone-number {
+  font-size: 16px; /* Increase font size for better readability */
+  margin-bottom: 0; /* Remove default margin */
+  color: #333; /* Darker text color */
+}
+
+.contact-text {
+  margin-left: 15px; /* Adjust margin for better spacing */
+}
+.copyright {
+  margin-left: 45%;
+  justify-content: center; /* Align horizontally in the center */
+  font-size: 10px;
+  color: #555; /* Dark gray color */
+  margin-top: 10px; /* Add some spacing between social media icons and copyright notice */
+}
+/* Media query for smaller screens */
 @media only screen and (max-width: 768px) {
   .footer-container {
     flex-direction: column; /* Display items in a column layout */
@@ -57,7 +67,7 @@
   }
 
   .contact-info {
-    font-size: 20px; /* Reduce font size for better readability */
+    font-size: 16px; /* Reduce font size for better readability */
     margin-bottom: 15px; /* Add spacing between contact info and social media icons */
   }
 
@@ -65,9 +75,9 @@
     margin-top: 15px; /* Add spacing above social media icons */
   }
 
-  .instagram-icon {
-    margin-right: 10px; /* Adjust spacing between Instagram icon and phone icon */
-    font-size: 30px; /* Reduce font size for better consistency */
+  .instagram-icon,
+  .whatsapp-icon {
+    font-size: 20px; /* Reduce font size for better consistency */
   }
 
   .phone-container {
@@ -85,5 +95,12 @@
   .contact-text {
     margin: 0; /* Remove margins */
     text-align: center; /* Center align the text */
+  }
+  .copyright {
+    margin-left: 32%;
+    justify-content: center; /* Align horizontally in the center */
+    font-size: 10px;
+    color: #555; /* Dark gray color */
+    margin-top: 10px; /* Add some spacing between social media icons and copyright notice */
   }
 }
