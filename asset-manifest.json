@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/DaliasAccessories/static/css/main.a4e5df54.css",
-    "main.js": "/DaliasAccessories/static/js/main.c5120c41.js",
+    "main.css": "/DaliasAccessories/static/css/main.a93b2e72.css",
+    "main.js": "/DaliasAccessories/static/js/main.24515b29.js",
     "static/js/787.55aac5e7.chunk.js": "/DaliasAccessories/static/js/787.55aac5e7.chunk.js",
     "static/media/wallet.png": "/DaliasAccessories/static/media/wallet.ce36779abb3efabe1d04.png",
     "index.html": "/DaliasAccessories/index.html",
-    "main.a4e5df54.css.map": "/DaliasAccessories/static/css/main.a4e5df54.css.map",
-    "main.c5120c41.js.map": "/DaliasAccessories/static/js/main.c5120c41.js.map",
+    "main.a93b2e72.css.map": "/DaliasAccessories/static/css/main.a93b2e72.css.map",
+    "main.24515b29.js.map": "/DaliasAccessories/static/js/main.24515b29.js.map",
     "787.55aac5e7.chunk.js.map": "/DaliasAccessories/static/js/787.55aac5e7.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.a4e5df54.css",
-    "static/js/main.c5120c41.js"
+    "static/css/main.a93b2e72.css",
+    "static/js/main.24515b29.js"
   ]
 }
