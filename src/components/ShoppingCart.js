@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../css/ShoppingCart.css';
 import AWS from 'aws-sdk'; // Import AWS SDK
+import {firestore, writeBatch, collection, doc, getDoc, updateDoc } from '../firebase';
 
 const ShoppingCart = ({ updateCartItemsCount }) => {
   const [cartItems, setCartItems] = useState([]);
@@ -30,7 +31,6 @@ const ShoppingCart = ({ updateCartItemsCount }) => {
     cartItems.forEach((item) => {
       totalPrice += parseFloat(item.price);
     });
-    console.log(cartItems)
     setTotalPrice(totalPrice);
   }, [cartItems]);
 
@@ -61,30 +61,77 @@ const ShoppingCart = ({ updateCartItemsCount }) => {
     if (!confirmCheckout) {
       return;
     }
-  
+   // Prepare HTML content for the email
+    const itemsList = cartItems.map(item => (
+      `<li>
+        <img src="${item.imageUrl}" alt="${item.caption}" style="max-width: 100px; height: auto;">
+        <p>${item.caption}</p>
+        <p>Price: $${item.price}</p>
+      </li>`
+      )).join('');
+      const emailContent = `
+      <p>You got a new order!</p>
+      <p>Total Price (Including Shipping): $${totalPriceWithShipping.toFixed(2)}</p>
+      <ul>${itemsList}</ul>
+      <p>Phone Number: ${phoneNumber}</p>
+      <p>Address: ${address}</p>
+      <p>First Name: ${firstName}</p>
+      <p>Last Name: ${lastName}</p>
+    `;
     // Send email using Amazon SES
     const ses = new AWS.SES({ region: 'eu-north-1' }); 
     const params = {
       Destination: {
-        ToAddresses: ['daliaobeid15@gmail.com'], 
+        ToAddresses: ['yehya.houssen1996@gmail.com'], 
       },
       Message: {
         Body: {
-          Text: {
-            Data: `You got a new order!\n\nTotal Price (Including Shipping): $${totalPriceWithShipping.toFixed(2)}\n\nItems:\n${cartItems.map(item => `- ${item.caption} - $${item.price}`).join('\n')}
-              \n\nPhone Number: ${phoneNumber}\nAddress: ${address}\nFirst Name: ${firstName}\nLast Name: ${lastName}`,
+          Html: {
+            Data: emailContent,
           },
         },
         Subject: {
           Data: 'New Order! ',
         },
       },
-      Source: 'daliaobeid15@gmail.com',
+      Source: 'yehya.houssen1996@gmail.com',
     };
   
     try {
+      // Iterate over each item in the cartItems array
+      for (const item of cartItems) {
+        let imagesCollectionRef;
+  
+        if (item.mainCategory === 'Nail' || item.mainCategory === 'Makeup') {
+          imagesCollectionRef = doc(firestore, 'images', item.mainCategory, 'generatedID123', item.imageId);
+        } else {
+          imagesCollectionRef = doc(firestore, 'images', item.mainCategory, item.subCategory, item.imageId);
+        }
+  
+        const itemDoc = await getDoc(imagesCollectionRef);
+  
+        if (itemDoc.exists()) {
+          const currentStock = itemDoc.data().stock;
+  
+          if (currentStock > 0) {
+            // Create a new batch for each item update
+            const batch = writeBatch(firestore);
+            const itemRef = imagesCollectionRef;
+  
+            // Decrease stock by one
+            batch.update(itemRef, { stock: currentStock - 1 });
+  
+            // Commit the batched update for this item
+            await batch.commit();
+          } else {
+            console.error(`Item "${item.caption}" is out of stock.`);
+          }
+        } else {
+          console.error(`Item "${item.caption}" not found in Firestore.`);
+        }
+      }
+
       await ses.sendEmail(params).promise();
-      console.log('Email sent successfully');
       // Clear cart after successful checkout
       window.alert('Email sent successfully! You will be contacted as soon as possible.');
       setCartItems([]);

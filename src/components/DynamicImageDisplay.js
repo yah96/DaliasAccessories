@@ -26,6 +26,7 @@ const DynamicImageDisplay = ({ updateCartItemsCount }) => {
         const snapshot = await getDocs(q);
 
         const imageData = snapshot.docs.map((doc) => ({
+          imageId : doc.id,
           imageUrls: doc.data().imageUrl || [], // Store array of image URLs
           caption: doc.data().caption || 'No caption',
           price: doc.data().price ? `${doc.data().price}` : 'No price available', // Add dollar sign to price
@@ -47,13 +48,23 @@ const DynamicImageDisplay = ({ updateCartItemsCount }) => {
   }, [mainCategory, subCategory]);
 
   // Function to add item to shopping cart in localStorage
-  const addToShoppingCart = (imageUrl, caption, price, stock, index) => {
+  const addToShoppingCart = (imageId,imageUrl, caption, price, stock, index) => {
     // Check if item is available
     if (stock > 0) {
       // Retrieve existing shopping cart items from localStorage
       const existingCartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+      // Create a new item object with additional information (mainCategory and subCategory)
+      const newItem = {
+        imageId,
+        imageUrl,
+        caption,
+        price,
+        stock,
+        mainCategory,
+        subCategory
+      };
       // Add the new item to the shopping cart
-      const updatedCartItems = [...existingCartItems, { imageUrl, caption, price }];
+      const updatedCartItems = [...existingCartItems, newItem];
       // Store the updated shopping cart items in localStorage
       localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
       // Set notification message
@@ -73,7 +84,6 @@ const DynamicImageDisplay = ({ updateCartItemsCount }) => {
   };
 
   const handleImageClick = (index) => {
-    console.log(index)
     setSelectedMainImageIndex(index);
     setSelectedImageIndex(selectedDotImages[index]);
     setShowModal(true);
@@ -108,7 +118,24 @@ const DynamicImageDisplay = ({ updateCartItemsCount }) => {
       return updatedDotImages;
     });
   };
-
+  const renderDotNavigation = (itemIndex) => {
+    const { imageUrls } = images[itemIndex];
+    if (Array.isArray(imageUrls) && imageUrls.length > 1) {
+      return (
+        <div className="dots">
+          {imageUrls.map((url, i) => (
+            <span
+              key={i}
+              className={i === selectedMainImageIndex ? 'dot active' : 'dot'}
+              onClick={() => setSelectedMainImageIndex(i)}
+            ></span>
+          ))}
+        </div>
+      );
+    }
+    return null; // No dots if only one image or no image array
+  };
+  
   return (
     <div className="dynamic-image-display">
       <h2>{`${mainCategory} - ${subCategory}`}</h2>
@@ -122,7 +149,7 @@ const DynamicImageDisplay = ({ updateCartItemsCount }) => {
             <div key={itemIndex} className="dynamic-image-item">
               <div className="image-container">
                 {/* Render single image if imageUrl is a string */}
-                {typeof item.imageUrls === 'string'  || images[selectedMainImageIndex].imageUrls.length === 1 ? (
+                {typeof item.imageUrls === 'string' || item.imageUrls.length === 1 ? (
                   <img src={item.imageUrls} alt={`${itemIndex}-${selectedImageIndex}`} onClick={() => handleImageClick(itemIndex)} />
                 ) : (
                   <>
@@ -143,11 +170,13 @@ const DynamicImageDisplay = ({ updateCartItemsCount }) => {
                 <p className="price">${item.price}</p>
               </div>
               {/* Button to add item to shopping cart or "Added to Cart" text */}
-              {clickedIndex === itemIndex ? (
-                <span>Added to Cart</span>
-              ) : (
-                <button className="add-to-cart-button" onClick={() => addToShoppingCart(item.imageUrls, item.caption, item.price, item.stock, itemIndex)}>Add to Shopping Cart</button>
-              )}
+              {clickedIndex === itemIndex && !showModal ? (
+                  <span>Added to Cart</span>
+                ) : item.stock > 0 ? (
+                  <button className="add-to-cart-button" onClick={() => addToShoppingCart(item.imageId,item.imageUrls, item.caption, item.price, item.stock, itemIndex)}>Add to Shopping Cart</button>
+                ) : (
+                  <button className="out-of-stock-button" disabled>Out of Stock</button>
+                )}
             </div>
           ))}
         </div>
