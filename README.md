@@ -1,1 +1,1 @@
-a simple react application with css and images. # momo
+a simple react application with css and images.
