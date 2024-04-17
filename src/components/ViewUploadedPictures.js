@@ -11,7 +11,9 @@ const ViewUploadedPictures = () => {
     const [selectedPicture, setSelectedPicture] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [selectedDotImages, setSelectedDotImages] = useState([]); 
-    const [uploading, setUploading] = useState(false); // State to track uploading status
+    const [uploading, setUploading] = useState(false);
+    const [editLoading, setEditLoading] = useState(false); // State for edit button loading
+
 
     useEffect(() => {
         const fetchImages = async () => {
@@ -39,7 +41,8 @@ const ViewUploadedPictures = () => {
                             mainCategory: category,
                             subCategory: subcategory,
                             details: doc.data().details || 'No details',
-                            price: doc.data().price || "No price"
+                            price: doc.data().price || "No price",
+                            stock: doc.data().stock || 0,
                         }));
                         imagesData.push(...imageData);
                     }
@@ -88,18 +91,20 @@ const ViewUploadedPictures = () => {
         }
     };
 
-    const handleEdit = (id, mainCategory, subCategory, currentCaption, currentPrice, currentDetails) => {
-        setSelectedPicture({ id, mainCategory, subCategory, currentCaption, currentPrice, currentDetails });
+    const handleEdit = (id, mainCategory, subCategory, currentCaption, currentPrice, currentDetails,currentStock) => {
+        setSelectedPicture({ id, mainCategory, subCategory, currentCaption, currentPrice, currentDetails, currentStock });
         setShowModal(true);
     };
 
-    const updateImage = async (id, mainCategory, subCategory, newCaption, newPrice, newDetails) => {
+    const updateImage = async (id, mainCategory, subCategory, newCaption, newPrice, newDetails, newStock) => {
+        setEditLoading(true); // Set edit loading state to true
         try {
             const imageRef = doc(firestore, 'images', mainCategory, subCategory, id);
             await updateDoc(imageRef, {
                 caption: newCaption,
                 price: parseFloat(newPrice),
-                details: newDetails
+                details: newDetails,
+                stock: newStock
             });
             setPictures(pictures.map(picture => {
                 if (picture.id === id) {
@@ -107,13 +112,16 @@ const ViewUploadedPictures = () => {
                         ...picture,
                         caption: newCaption,
                         price: parseFloat(newPrice),
-                        details: newDetails
+                        details: newDetails,
+                        stock: newStock
                     };
                 }
                 return picture;
             }));
         } catch (error) {
             console.error('Error updating image', error);
+        } finally {
+            setEditLoading(false); // Set edit loading state back to false
         }
     };
 
@@ -265,7 +273,9 @@ const ViewUploadedPictures = () => {
                             <p className="image-caption">{picture.caption}</p>
                         </div>
                         <div className="uploaded-image-button-container">
-                            <button className="edit-button" onClick={() => handleEdit(picture.id, picture.mainCategory, picture.subCategory, picture.caption, picture.price, picture.details)}>Edit</button>
+                            <button className="edit-button" onClick={() => handleEdit(picture.id, picture.mainCategory, picture.subCategory, picture.caption, picture.price, picture.details, picture.stock)}>
+                                    {editLoading ? 'Loading...' : 'Edit'}
+                            </button>                            
                             <button className="delete-button" onClick={() => handleDelete(picture.id, picture.mainCategory, picture.subCategory, picture.imageUrl)}>Delete</button>
                         </div>
                     </div>
@@ -282,6 +292,7 @@ const ViewUploadedPictures = () => {
                     currentCaption={selectedPicture.currentCaption}
                     currentPrice={selectedPicture.currentPrice}
                     currentDetails={selectedPicture.currentDetails}
+                    currentStock = {selectedPicture.currentStock}
                     handleEdit={updateImage}
                     setShowModal={setShowModal}
                 />

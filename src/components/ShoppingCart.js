@@ -82,7 +82,7 @@ const ShoppingCart = ({ updateCartItemsCount }) => {
     const ses = new AWS.SES({ region: 'eu-north-1' }); 
     const params = {
       Destination: {
-        ToAddresses: ['yehya.houssen1996@gmail.com'], 
+        ToAddresses: ['daliaobeid15@gmail.com'], 
       },
       Message: {
         Body: {
@@ -94,7 +94,7 @@ const ShoppingCart = ({ updateCartItemsCount }) => {
           Data: 'New Order! ',
         },
       },
-      Source: 'yehya.houssen1996@gmail.com',
+      Source: 'daliaobeid15@gmail.com',
     };
   
     try {

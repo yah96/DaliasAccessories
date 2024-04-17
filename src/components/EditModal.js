@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import '../css/EditModal.css'; // Import your CSS file for styling
 
-const EditModal = ({ id, mainCategory, subCategory, currentCaption, currentPrice, currentDetails, handleEdit, setShowModal }) => {
+const EditModal = ({ id, mainCategory, subCategory, currentCaption, currentPrice, currentDetails, currentStock, handleEdit, setShowModal }) => {
   const [newCaption, setNewCaption] = useState(currentCaption);
   const [newPrice, setNewPrice] = useState(currentPrice);
   const [newDetails, setNewDetails] = useState(currentDetails);
+  const [newStock, setNewStock] = useState(currentStock);
 
   const handleSubmit = () => {
     // Call handleEdit function to update the data
-    handleEdit(id, mainCategory, subCategory, newCaption, newPrice, newDetails);
+    handleEdit(id, mainCategory, subCategory, newCaption, newPrice, newDetails, newStock);
 
     // Close the modal
     setShowModal(false);
@@ -38,6 +39,15 @@ const EditModal = ({ id, mainCategory, subCategory, currentCaption, currentPrice
           id="price"
           value={newPrice}
           onChange={(e) => setNewPrice(e.target.value)}
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="stock">Stock:</label>
+        <input
+          type="text"
+          id="stock"
+          value={newStock}
+          onChange={(e) => setNewStock(e.target.value)}
         />
       </div>
       <div className="form-group">
